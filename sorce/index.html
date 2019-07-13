@@ -124,21 +124,21 @@
                 dat = this.curData.getDay();
                 offSet = dat+(CALENDAR_WEEKDAY_EU ? 6 : 0);
                 this.curData.setDate(-(offSet > 7 ? offSet - 7 : offSet));
-                for(i = 1; i <= 42; i++){
+                for(let i = 1; i <= 42; i++){
                     this.curData.setDate(this.curData.getDate()+1);
                     dat = this.curData.getDay();
                     
-                    stat = (dat == 0 || dat == 6 ? CALENDAR_STAT_WEEKEND : 0);
+                    stat = (dat === 0 || dat === 6 ? CALENDAR_STAT_WEEKEND : 0);
                     stat = (CALENDAR_HIGHDAY.includes(this.getStrDate(this.curData)) ? CALENDAR_STAT_HIGHDAY : stat);
-                    stat = (this.month != this.curData.getMonth() ? CALENDAR_STAT_ALIENDAY : stat);
+                    stat = (this.month !== this.curData.getMonth() ? CALENDAR_STAT_ALIENDAY : stat);
                     weekday = this.curData.toLocaleString(CALENDAR_LOCALISATION , {weekday: CALENDAR_VIEW_WEEKDAY});
-                    if (arr[weekday] == undefined){
+                    if (arr[weekday] === undefined){
                         arr[weekday] = Array();
                     }
                     arr[weekday].push(new objday(this.curData.getDate(), this.curData.getTime(), stat));
                     //arr[weekday][i]=this.curData.getDate();
                 }
-                for(key in arr) {
+                for(let key in arr) {
                     this.listDay[key]=arr[key];
                 };
                 //arr.splice(index[, deleteCount, elem1, ..., elemN])
