@@ -1,10 +1,16 @@
 <template>
-    <span class="calendar_first_item"> {{val}}</span>
+    <span class="calendar_item"> {{val}}</span>
 </template>
 
 <script>
 export default {
   name: 'CalendarWeekItem',
-  props: ['val', 'index']
+  props: ['val']
 }
 </script>
+
+<style>
+  .calendar_item {
+    width: 90px;  
+  }
+</style>

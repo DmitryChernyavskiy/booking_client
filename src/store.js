@@ -23,13 +23,13 @@ export default new Vuex.Store({
       return state.listday
     },
     OBJ: state => {
-      return state.obj
+      return state.obj;
     }
   },
 
   mutations: {
-    SET_TODO: (state, payload) => {
-      state.todos = payload
+    ADD_MOUNTH: (state, payload) => {
+      state.obj.addMonth(payload)
     },
 
     ADD_TODO: (state, payload) => {

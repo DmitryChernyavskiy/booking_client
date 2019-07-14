@@ -1,10 +1,11 @@
 import config from './config'
 
-function Objday (name, date, stat) {
+function Objday (name, date, weekeend, alienday) {
   this.date = date
   this.name = name
-  this.stat = stat
-  this.task = ''
+  this.weekeend = weekeend
+  this.alienday = alienday
+  this.events = [];
 }
 
 export default function Calendar () {
@@ -13,7 +14,7 @@ export default function Calendar () {
   this.strmonth = ''
   this.listDay = {}
   this.getListDay = function () {
-    var weekday; var dat; var offSet; var stat; var arr = {}
+    var weekday; var dat; var offSet; var weekeend; var alienday; var arr = {}
 
     this.curData.setDate(1)
     this.month = this.curData.getMonth()
@@ -25,14 +26,13 @@ export default function Calendar () {
       this.curData.setDate(this.curData.getDate() + 1)
       dat = this.curData.getDay()
 
-      stat = (dat === 0 || dat === 6 ? config.STAT_WEEKEND : 0)
-      stat = (config.HIGHDAY.includes(this.getStrDate(this.curData)) ? config.STAT_HIGHDAY : stat)
-      stat = (this.month !== this.curData.getMonth() ? config.STAT_ALIENDAY : stat)
+      weekeend = (dat === 0 || dat === 6 || config.HIGHDAY.includes(this.getStrDate(this.curData)))
+      alienday = (this.month !== this.curData.getMonth())
       weekday = this.curData.toLocaleString(config.LOCALISATION, { weekday: config.VIEW_WEEKDAY })
       if (arr[weekday] === undefined) {
         arr[weekday] = []
       }
-      arr[weekday].push(new Objday(this.curData.getDate(), this.curData.getTime(), stat))
+      arr[weekday].push(new Objday(this.curData.getDate(), this.curData.getTime(), weekeend, alienday))
       // arr[weekday][i]=this.curData.getDate();
     }
     for (let key in arr) {

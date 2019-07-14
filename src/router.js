@@ -14,9 +14,10 @@ export default new Router({
       component: Home
     },
     {
-      path: '/Event',
+      path: '/Event/:id',
       name: 'EventView',
-      component: EventView
+      component: EventView,
+      props: true
     },
     {
       path: '/admin',

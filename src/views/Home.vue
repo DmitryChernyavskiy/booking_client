@@ -1,35 +1,47 @@
 <template>
-    <div style="background: #fdf5dd; display: inline-block;">
+    <div  v-bind:style='{ backgroundImage: `url(@/assets/delta1.jpg` }'>
+        <CalendarMounthSelect :month="obj.strmonth"></CalendarMounthSelect>
         <div v-for="(item, index) in listday" :key="index">
-            <CalendarWeekItem :val="index" :item="item"></CalendarWeekItem>
-            <span :key="text">{{ text }}</span>
+            <CalendarWeekItem :val="index" ></CalendarWeekItem>
+            <CalendarDayItem v-for="(item1, index1) in item" :index="index1" :val="item1" :alien_day = "item1.alienday" :day_off = "item1.weekeend"></CalendarDayItem>
         </div>
     </div>
 </template>
 
 <script>
 
-import config from '../libs/config'
+import config from '@/libs/config'
+import Event from '@/libs/Event'
 import CalendarWeekItem from '@/components/CalendarWeekItem.vue'
+import CalendarDayItem from '@/components/CalendarDayItem.vue'
+import CalendarMounthSelect from '@/components/CalendarMounthSelect.vue'
 // @ is an alias to /src
 
 export default {
   name: 'home',
-  methods: {
-    eeekend: function (val) {
-      return (val === config.STAT_WEEKEND || val === config.STAT_HIGHDAY)
-    },
-    alienday: function (val) {
-      return (val === config.STAT_ALIENDAY)
-    }
-  },
   computed: {
     listday () {
       return this.$store.getters.LIST_DAY
+    },
+    obj () {
+      return this.$store.getters.OBJ
     }
   },
   components: {
-    CalendarWeekItem
+    CalendarWeekItem,
+    CalendarDayItem,
+    CalendarMounthSelect
   }
 }
 </script>
+
+<style>
+  .calendar_item {
+      height: 120px;
+      text-align: left;
+      display: inline-block;
+      border-bottom-color: darkgoldenrod;
+      border-bottom: 1px solid;
+      margin: 2px 2px;
+    }
+</style>
