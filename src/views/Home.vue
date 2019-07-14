@@ -10,8 +10,6 @@
 
 <script>
 
-import config from '@/libs/config'
-import Event from '@/libs/Event'
 import CalendarWeekItem from '@/components/CalendarWeekItem.vue'
 import CalendarDayItem from '@/components/CalendarDayItem.vue'
 import CalendarMounthSelect from '@/components/CalendarMounthSelect.vue'

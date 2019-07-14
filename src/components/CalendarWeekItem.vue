@@ -11,6 +11,6 @@ export default {
 
 <style>
   .calendar_item {
-    width: 90px;  
+    width: 90px;
   }
 </style>

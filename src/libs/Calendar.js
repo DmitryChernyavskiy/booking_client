@@ -5,7 +5,7 @@ function Objday (name, date, weekeend, alienday) {
   this.name = name
   this.weekeend = weekeend
   this.alienday = alienday
-  this.events = [];
+  this.events = []
 }
 
 export default function Calendar () {

@@ -1,5 +1,5 @@
 <template>
-    <span class="calendar_item" :class="{'alien-day': alien_day, 'day-off': day_off}" @click = "test_btn()"> 
+    <span class="calendar_item" :class="{'alien-day': alien_day, 'day-off': day_off}" @click = "test_btn()">
       <div>{{val.name}}</div>
       <div>event test</div>
     </span>
@@ -10,9 +10,9 @@ export default {
   name: 'CalendarDayItem',
   props: ['val', 'index', 'day_off', 'alien_day'],
   methods: {
-      test_btn: function(){
-          this.$router.push({ name: 'EventView', params: { id: 123 }});
-      }
+    test_btn: function () {
+      this.$router.push({ name: 'EventView', params: { id: 123 } })
+    }
   }
 }
 </script>

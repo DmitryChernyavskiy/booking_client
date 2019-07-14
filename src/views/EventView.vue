@@ -14,7 +14,7 @@ import EventChild from '@/components/EventCild.vue'
 
 export default {
   name: 'EventView',
-  props: ['id','event'],
+  props: ['id', 'event'],
   components: {
     EventBase,
     EventChild

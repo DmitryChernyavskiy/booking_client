@@ -11,11 +11,11 @@ export default {
   name: 'CalendarMounthSelect',
   props: ['month'],
   methods: {
-    plus_btn: function(){
-        this.$store.commit('ADD_MOUNTH', 1);
+    plus_btn: function () {
+      this.$store.commit('ADD_MOUNTH', 1)
     },
-    minus_btn: function(){
-        this.$store.commit('ADD_MOUNTH', -1);
+    minus_btn: function () {
+      this.$store.commit('ADD_MOUNTH', -1)
     }
   }
 }
