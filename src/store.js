@@ -31,24 +31,30 @@ export default new Vuex.Store({
   mutations: {
     ADD_MOUNTH: (state, payload) => {
       state.obj.addMonth(payload)
-    },
-
-    ADD_TODO: (state, payload) => {
-      state.todos.push(payload)
     }
   },
 
   actions: {
+    /*ADD_MOUNT: (mounth) {
+      context.commit('ADD_MOUNTH', mounth);
+
+    },*/
     GET_TODO: async (context, payload) => {
-      let { data } = await Axios.get('http://yourwebsite.com/api/todo')
+      let { data } = await Axios.get('http://xxx.com/api/todo')
       if (data.status === 200) {
-        context.commit('SET_TODO', data)
+        context.commit('ADD_MOUNTH', data)
       }
     },
 
     SAVE_TODO: async (context, payload) => {
-      // let { data } = await Axios.post('http://yourwebsite.com/api/todo')
-      context.commit('ADD_TODO', payload)
+      // let { data } = await Axios.post('http://xxx.com/api/todo')
+      context.commit('ADD_MOUNTH', payload)
     }
+    /*axios.all([
+      axios.get('http://google.com'),
+      axios.get('http://apple.com')
+  ]).then(axios.spread((googleRes, appleRes) => {
+      // do something with both responses
+  });*/
   }
 })

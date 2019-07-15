@@ -15,6 +15,9 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background:url('assets/delta1.jpg') no-repeat fixed;
+    background-size: 100%;
+    opacity: 0.9; 
 }
 #nav {
   padding: 30px;
@@ -28,4 +31,6 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+
 </style>
