@@ -17,6 +17,7 @@ import CalendarMounthSelect from '@/components/CalendarMounthSelect.vue'
 
 export default {
   name: 'home',
+  props: ['dat'],
   computed: {
     listday () {
       return this.$store.getters.LIST_DAY

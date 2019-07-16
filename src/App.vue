@@ -15,7 +15,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background:url('assets/delta1.jpg') no-repeat fixed;
+  bac_kground:url('assets/delta1.jpg') no-repeat fixed;
   background-size: 100%;
 }
 #nav {
