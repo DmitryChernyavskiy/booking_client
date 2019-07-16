@@ -40,7 +40,7 @@ export default new Vuex.Store({
 
     },*/
     GET_TODO: async (context, payload) => {
-      let { data } = await Axios.get('http://xxx.com/api/todo')
+      let { data } = await Axios.get('http://173.212.224.161/booking/server/api/events/Events')
       if (data.status === 200) {
         context.commit('ADD_MOUNTH', data)
       }
@@ -50,11 +50,6 @@ export default new Vuex.Store({
       // let { data } = await Axios.post('http://xxx.com/api/todo')
       context.commit('ADD_MOUNTH', payload)
     }
-    /*axios.all([
-      axios.get('http://google.com'),
-      axios.get('http://apple.com')
-  ]).then(axios.spread((googleRes, appleRes) => {
-      // do something with both responses
-  });*/
+ 
   }
 })
