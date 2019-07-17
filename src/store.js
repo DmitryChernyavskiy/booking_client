@@ -46,7 +46,7 @@ export default new Vuex.Store({
         
       context.commit('ADD_MOUNTH', payload);
       console.log('tmp');  
-      let tmp = Object.assign({}, context.getters.CUR_DATA);
+      let tmp = new Date(context.getters.CUR_DATA);
       console.log('tmp');
       let year = tmp.getFullYear();
       let mounth = tmp.getMonth();
@@ -59,13 +59,14 @@ export default new Vuex.Store({
       {id: 2, day_of_month: 17, date_start: '2019-07-17 18:30:00', date_end: '2019-07-17 20:00:00'},
       {id: 3, day_of_month: 18, date_start: '2019-07-18 10:15:00', date_end: '2019-07-18 11:00:00'}]
 
-      for (key in state.listday) {
+      let listday = context.state.listday
+      for (let key in listday) {
           for (let i=0; i<6; i++){
-            day = tate.listday[key][i].name;
+            let elem = listday[key][i];
             
-            for (let j=0; j<count(test); j++){
-                if (test[j].day_of_month === day){
-                    tate.listday[key][i].events.push(new Event(test[j].id, test[j].date_start, test[j].date_end))
+            for (let j=0; j<test.length; j++){
+                if ((test[j].day_of_month === elem.name) && (!elem.alienday)){
+                    elem.events.push(new Event(test[j].id, test[j].date_start, test[j].date_end))
                 }
               }
           }

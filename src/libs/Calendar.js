@@ -17,22 +17,24 @@ export default function Calendar () {
     var weekday; var dat; var offSet; var weekeend; var alienday; var arr = {}
 
     this.curData.setDate(1)
-    this.month = this.curData.getMonth()
-    this.strmonth = this.curData.toLocaleString(config.LOCALISATION, { month: 'long' }) + ' ' + this.curData.getFullYear()
-    dat = this.curData.getDay()
+    var curData = new Date(this.curData)
+    
+    this.month = curData.getMonth()
+    this.strmonth = curData.toLocaleString(config.LOCALISATION, { month: 'long' }) + ' ' + curData.getFullYear()
+    dat = curData.getDay()
     offSet = dat + (config.WEEKDAY_EU ? 6 : 0)
-    this.curData.setDate(-(offSet > 7 ? offSet - 7 : offSet))
+    curData.setDate(-(offSet > 7 ? offSet - 7 : offSet))
     for (let i = 1; i <= 42; i++) {
-      this.curData.setDate(this.curData.getDate() + 1)
-      dat = this.curData.getDay()
+      curData.setDate(curData.getDate() + 1)
+      dat = curData.getDay()
 
-      weekeend = (dat === 0 || dat === 6 || config.HIGHDAY.includes(this.getStrDate(this.curData)))
-      alienday = (this.month !== this.curData.getMonth())
-      weekday = this.curData.toLocaleString(config.LOCALISATION, { weekday: config.VIEW_WEEKDAY })
+      weekeend = (dat === 0 || dat === 6 || config.HIGHDAY.includes(this.getStrDate(curData)))
+      alienday = (this.month !== curData.getMonth())
+      weekday = curData.toLocaleString(config.LOCALISATION, { weekday: config.VIEW_WEEKDAY })
       if (arr[weekday] === undefined) {
         arr[weekday] = []
       }
-      arr[weekday].push(new Objday(this.curData.getDate(), this.curData.getTime(), weekeend, alienday))
+      arr[weekday].push(new Objday(curData.getDate(), curData.getTime(), weekeend, alienday))
       // arr[weekday][i]=this.curData.getDate();
     }
     for (let key in arr) {
