@@ -1,18 +1,26 @@
 <template>
-    <span class="calendar_item" :class="{'alien-day': alien_day, 'day-off': day_off}" @click = "test_btn()">
+    <span class="calendar_item" :class="{'alien-day': alien_day, 'day-off': day_off}" @click = "new_event_btn()">
       <div>{{val.name}}</div>
-      <div>event test</div>
+      <CalendarEventItem v-if='val.events.length>0' :events="val.events"></CalendarEventItem>
     </span>
 </template>
 
 <script>
+import CalendarEventItem from '@/components/CalendarEventItem.vue'
+
 export default {
   name: 'CalendarDayItem',
   props: ['val', 'index', 'day_off', 'alien_day'],
   methods: {
-    test_btn: function () {
-      this.$router.push({ name: 'EventView', params: { id: 123 } })
+    new_event_btn: function () {
+        if (this.day_off || this.alien_day){
+            return;
+        }
+      this.$router.push({ name: 'EventView', params: { id: "0" } })
     }
+  },
+  components: {
+    CalendarEventItem
   }
 }
 </script>

@@ -10,17 +10,17 @@ function Objday (name, date, weekeend, alienday) {
 
 export default function Calendar () {
   this.curData = new Date()
-  this.month = 0
-  this.strmonth = ''
+  this.month = this.curData.getMonth()
+  this.strmonth = this.curData.toLocaleString(config.LOCALISATION, { month: 'long' }) + ' ' + this.curData.getFullYear()
   this.listDay = {}
   this.getListDay = function () {
     var weekday; var dat; var offSet; var weekeend; var alienday; var arr = {}
 
     this.curData.setDate(1)
     var curData = new Date(this.curData)
-    
     this.month = curData.getMonth()
     this.strmonth = curData.toLocaleString(config.LOCALISATION, { month: 'long' }) + ' ' + curData.getFullYear()
+    
     dat = curData.getDay()
     offSet = dat + (config.WEEKDAY_EU ? 6 : 0)
     curData.setDate(-(offSet > 7 ? offSet - 7 : offSet))

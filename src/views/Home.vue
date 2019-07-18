@@ -30,6 +30,10 @@ export default {
     CalendarWeekItem,
     CalendarDayItem,
     CalendarMounthSelect
+  },
+  created: function () {
+     //this.$store.commit('INIT_LIST', '')
+     this.$store.dispatch('ADD_MOUNTH', 0)
   }
 }
 </script>
