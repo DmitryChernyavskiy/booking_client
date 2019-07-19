@@ -1,7 +1,7 @@
 <template>
     <div>
         <select multiple class="calendar_events">
-            <option class="calendar_event_item" v-for="(item, index) in events" :key="item.id" @click.stop = "edit_event_btn()"> {{item.date_start}}-{{item.date_end}} </option>
+            <option class="calendar_event_item" v-for="(item, index) in events" :key="index" @click.stop = 'edit_event_btn(item.id)'> {{item.date_start}}-{{item.date_end}} </option>
         </select>
     </div>
 </template>
@@ -11,8 +11,9 @@ export default {
   name: 'CalendarEventItem',
   props: ['events'],
   methods: {
-    edit_event_btn: function () {
-      this.$router.push({ name: 'EventView', params: { id: 111 } })
+    edit_event_btn: function (id) {
+      this.$store.dispatch('REQUEST_EVENT', id)
+      this.$router.push({ name: 'EventView', params: { id: id } })
     }
   }
 }

@@ -31,8 +31,7 @@ export default {
     CalendarDayItem,
     CalendarMounthSelect
   },
-  created: function () {
-     //this.$store.commit('INIT_LIST', '')
+  mounted: function () {
      this.$store.dispatch('ADD_MOUNTH', 0)
   }
 }

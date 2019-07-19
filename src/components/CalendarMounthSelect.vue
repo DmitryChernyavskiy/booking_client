@@ -12,6 +12,7 @@ export default {
   props: ['month'],
   methods: {
     plus_btn: function () {
+
       this.$store.dispatch('ADD_MOUNTH', 1)
     },
     minus_btn: function () {

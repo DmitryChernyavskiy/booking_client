@@ -2,7 +2,7 @@ import config from './config'
 
 function Objday (name, date, weekeend, alienday) {
   this.date = date
-  this.name = name
+  this.name = String(name)
   this.weekeend = weekeend
   this.alienday = alienday
   this.events = []
@@ -46,10 +46,10 @@ export default function Calendar () {
   this.getStrDate = function (dat) {
     return '' + (dat.getMonth() + 1) + '/' + dat.getDate() + '/' + dat.getFullYear()
   }
-  this.addMonth = function (offset) {
+  this.setMonth = function (offset) {
     this.curData.setDate(1)
     this.curData.setMonth(this.month + offset)
-    this.getListDay()
+    //this.getListDay()
   }
 }
 
