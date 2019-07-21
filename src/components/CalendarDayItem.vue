@@ -13,10 +13,10 @@ export default {
   props: ['val', 'index', 'day_off', 'alien_day'],
   methods: {
     new_event_btn: function () {
-        if (this.day_off || this.alien_day){
-            return;
-        }
-      this.$router.push({ name: 'EventView', params: { id: "0" } })
+      if (this.day_off || this.alien_day) {
+        return
+      }
+      this.$router.push({ name: 'EventView', params: { id: '0' } })
     }
   },
   components: {
@@ -29,6 +29,7 @@ export default {
   .calendar_item {
       width: 125px;
 
+      background: #a9a9a97d;
       border-right-color: brown;
       border-right: 1px solid;
     }
@@ -36,6 +37,6 @@ export default {
             color: red;
         }
     .alien-day {
-        background: #cccbc82e
+        background: #30302e7a
     }
 </style>

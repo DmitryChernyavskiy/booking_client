@@ -20,7 +20,7 @@ export default function Calendar () {
     var curData = new Date(this.curData)
     this.month = curData.getMonth()
     this.strmonth = curData.toLocaleString(config.LOCALISATION, { month: 'long' }) + ' ' + curData.getFullYear()
-    
+
     dat = curData.getDay()
     offSet = dat + (config.WEEKDAY_EU ? 6 : 0)
     curData.setDate(-(offSet > 7 ? offSet - 7 : offSet))
@@ -49,7 +49,7 @@ export default function Calendar () {
   this.setMonth = function (offset) {
     this.curData.setDate(1)
     this.curData.setMonth(this.month + offset)
-    //this.getListDay()
+    // this.getListDay()
   }
 }
 

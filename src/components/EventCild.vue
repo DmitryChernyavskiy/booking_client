@@ -9,6 +9,6 @@
 <script>
 export default {
   name: 'EventChild',
-  props: ['id', 'date_start', 'date_end', 'time_start', 'time_end']
+  props: ['id', 'date_start', 'time_start', 'time_end']
 }
 </script>

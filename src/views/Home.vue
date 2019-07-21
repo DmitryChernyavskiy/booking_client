@@ -1,6 +1,6 @@
 <template>
     <div class="caendar">
-        <CalendarMounthSelect :month="obj.strmonth"></CalendarMounthSelect>
+        <CalendarMounthSelect class="month_item":month="obj.strmonth"></CalendarMounthSelect>
         <div class="clearfix" v-for="(item, index) in listday" :key="index">
             <CalendarWeekItem :val="index" ></CalendarWeekItem>
             <CalendarDayItem v-for="(item1, index1) in item" :index="index1" :val="item1" :key="index1" :alien_day = "item1.alienday" :day_off = "item1.weekeend"></CalendarDayItem>
@@ -32,26 +32,30 @@ export default {
     CalendarMounthSelect
   },
   mounted: function () {
-     this.$store.dispatch('ADD_MOUNTH', 0)
+    // this.$store.dispatch('ADD_MOUNTH', 0)
   }
 }
 </script>
 
 <style>
-  .clearfix::after {
-    display: block; content: "";
-    clear: both;
-  }
-  .calendar_item {
-      float: left;
-      height: 120px;
-      text-align: left;
-      display: inline-block;
-      border-bottom-color: darkgoldenrod;
-      border-bottom: 1px solid;
-      margin: 2px 2px;
+    .clearfix::after {
+        display: block; content: "";
+        clear: both;
+    }
+    .calendar_item {
+        float: left;
+        height: 120px;
+        text-align: left;
+        display: inline-block;
+        border-bottom-color: darkgoldenrod;
+        border-bottom: 1px solid;
+        margin: 2px 2px;
     }
     .caendar{
-      min-width: 925px;
+        min-width: 925px;
+        width: 925px;
+    }
+    .month_item{
+
     }
 </style>

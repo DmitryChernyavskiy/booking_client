@@ -12,5 +12,7 @@ export default {
 <style>
   .calendar_item {
     width: 90px;
+    background: #30302e7a;
+    font-weight: bolder;
   }
 </style>

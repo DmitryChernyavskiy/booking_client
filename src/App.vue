@@ -15,8 +15,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  bac_kground:url('assets/delta1.jpg') no-repeat fixed;
+  background:url('assets/delta1.jpg') no-repeat fixed;
   background-size: 100%;
+  min-width: 925px;
+  width: 925;
 }
 #nav {
   padding: 30px;

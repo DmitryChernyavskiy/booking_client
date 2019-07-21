@@ -1,7 +1,7 @@
 <template>
     <div>
         <select multiple class="calendar_events">
-            <option class="calendar_event_item" v-for="(item, index) in events" :key="index" @click.stop = 'edit_event_btn(item.id)'> {{item.date_start}}-{{item.date_end}} </option>
+            <option v-for="(item, index) in events" :key="index" @click.stop = 'edit_event_btn(item.id_event)' class="calendar_event_item"> {{item.time_start}}-{{item.time_end}} </option>
         </select>
     </div>
 </template>
@@ -23,10 +23,11 @@ export default {
   .calendar_events {
     height: 100px;
     width: 100%;
+    background: #fffdfd00;
   },
   .calendar_event_item {
     margin: 2px;
-    background-color: #0e1c4f45;
+    background: #4747fa;
     font-size: smaller;
   }
 </style>

@@ -1,5 +1,23 @@
+import axios from 'axios'
 import Vue from 'vue'
 
+const base = axios.create({
+  baseURL: 'http://173.212.224.161/booking/server/api'// config.BASE_API_URL
+})
+
+Vue.prototype.$http = base
+
+export default {
+  get (url, user) {
+    debugger
+    return Vue.$http.get('url', { auth: user }, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      } })
+  }
+}
+/*
 export default {
     get(url, request) {
         return Vue.http.get(url, request)
@@ -22,8 +40,6 @@ export default {
             .catch((error) => Promise.reject(error));
     }
 }
-
-
 
 import api from '../../utils/api.js'
 
@@ -48,4 +64,4 @@ const actions = {
             .then((response) => context.commit('DELETE_INCREMENTER', response))
             .catch((error) => context.commit('API_FAILURE', error));
     }
-};
+}; */
