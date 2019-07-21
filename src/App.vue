@@ -15,9 +15,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background:url('assets/delta1.jpg') no-repeat fixed;
+  background:url('assets/delta1.jpg') fixed;
   background-size: 100%;
   min-width: 925px;
+  min-height: 750px;
   width: 925;
 }
 #nav {
@@ -26,11 +27,17 @@
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
+  text-decoration: none;
+  color: #42b983;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: white;
+  text-decoration: underline;
+}
+
+h1 {
+  color: white;
 }
 
 </style>

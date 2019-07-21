@@ -7,6 +7,7 @@
 
 <script>
 import CalendarEventItem from '@/components/CalendarEventItem.vue'
+import * as DateTime from '../libs/Date'
 
 export default {
   name: 'CalendarDayItem',
@@ -16,6 +17,22 @@ export default {
       if (this.day_off || this.alien_day) {
         return
       }
+      let room = this.$store.getters.CUR_ROOM
+      if (room === undefined) {
+        return
+      }
+      let date = new Date(this.val.date)
+      let year = date.getFullYear()
+      let mounth = date.getMonth()
+
+      this.$store.commit('NEW_BASE_EVENT', { date_create: '',
+        date_end: '',
+        date_start: DateTime.DataToSql(year, mounth, this.val.name),
+        day_of_month: this.val.name,
+        id: '0',
+        id_event: '0',
+        name: room.name,
+        note: '' })
       this.$router.push({ name: 'EventView', params: { id: '0' } })
     }
   },

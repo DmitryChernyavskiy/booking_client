@@ -1,32 +1,10 @@
 <template>
     <div>
         <div class="Event_Edit">
-            <EventBase :id="BaseEvent.id_event" :date_start="BaseEvent.date_start" :time_start="BaseEvent.time_start" :time_end="BaseEvent.time_end" :note="BaseEvent.note"></EventBase>
-            <br>
-            <div class="repeat">
-                <input type="checkbox" id="recursiv" v-model="recursive">
-                <label for="recursiv">create serial event</label>
-            </div>
-            <div v-if="recursive">
-                <div class="repeat">
-                    <input type="radio" id="everyday" value="day" v-model="typeRepeat">
-                    <label for="everyday">everyday</label>
-                    <input  class="repeat_num" v-if="typeRepeat==='day' "v-model.number="repeatNum" type="number" min=1 max=4>
-                </div>
-                <div class="repeat">
-                    <input type="radio" id="everyweek" value="week" v-model="typeRepeat">
-                    <label for="everyweek">every week</label>
-                    <input  class="repeat_num" v-if="typeRepeat==='week' "v-model.number="repeatNum" type="number" min=1 max=4>
-                </div>
-                <div class="repeat">
-                    <input type="radio" id="everymonth" value="month" v-model="typeRepeat">
-                    <label for="everymonth">every month</label>
-                    <input  class="repeat_num" v-if="typeRepeat==='month' "v-model.number="repeatNum" type="number" min=1 max=4>
-                </div>
-            </div>
+            <EventBase :id="id" :date_start="getDate(BaseEvent.date_start)" :time_start="getTime(BaseEvent.date_start)" :time_end="getTime(BaseEvent.date_end)" :note="BaseEvent.note"></EventBase>
         </div>
         <div class="Event_Edit">
-        <button @click = "all_delete_btn(BaseEvent.id_event)">X</button>
+        <button v-if="id!=='0'" @click = "all_delete_btn()">X</button>
         </div>
         <div class="Event_Edit">
             <div class="clearfix" v-for="(item, index) in ChildEvents" :key="index">
@@ -45,7 +23,7 @@ import * as DateTime from '../libs/Date'
 
 export default {
   name: 'EventView',
-  props: ['id', 'recursive', 'typeRepeat', 'repeatNum','date_start','date_end','time_start','time_end'],
+  props: ['id', 'date_start', 'date_end', 'time_start', 'time_end'],
   components: {
     EventBase,
     EventChild
@@ -54,8 +32,14 @@ export default {
     all_delete_btn: function () {
       //
     },
-    delete_btn: function () {
+    delete_btn: function (id) {
       //
+    },
+    getDate: function (val) {
+      return DateTime.extractDate(val)
+    },
+    getTime: function (val) {
+      return DateTime.extractTime(val)
     }
   },
   computed: {
@@ -65,7 +49,7 @@ export default {
     ChildEvents () {
       return this.$store.getters.CHILD_EVENTS
     }
-    
+
   }
 }
 </script>
@@ -82,7 +66,8 @@ export default {
 
     }
     .repeat {
-        text-align:left
+        text-align:left;
+        color: white;
     }
     .repeat > label {
         width: 100px;

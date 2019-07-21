@@ -1,6 +1,6 @@
 <template>
     <div class="caendar">
-        <CalendarMounthSelect class="month_item":month="obj.strmonth"></CalendarMounthSelect>
+        <CalendarMounthSelect class="month_item" :month="obj.strmonth"></CalendarMounthSelect>
         <div class="clearfix" v-for="(item, index) in listday" :key="index">
             <CalendarWeekItem :val="index" ></CalendarWeekItem>
             <CalendarDayItem v-for="(item1, index1) in item" :index="index1" :val="item1" :key="index1" :alien_day = "item1.alienday" :day_off = "item1.weekeend"></CalendarDayItem>

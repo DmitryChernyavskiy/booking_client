@@ -98,6 +98,10 @@ export default new Vuex.Store({
       state.curEvent = payload
       state.curBaseEvent = payload[0]
     },
+    NEW_BASE_EVENT: (state, payload) => {
+      state.curEvent = []
+      state.curBaseEvent = payload
+    },
     ROOMS: (state, payload) => {
       state.rooms = payload
     },
@@ -136,8 +140,8 @@ export default new Vuex.Store({
       // let countDay = tmp.getMonth();
       let dateStart = DateTime.DataToSql(year, mounth + 1, 1)
       let dateEnd = DateTime.DataToSql(tmp.getFullYear(), tmp.getMonth() + 1, 1)
-      paramApi['date_start'] = dateStart;
-      paramApi['date_end'] = dateEnd;
+      paramApi['date_start'] = dateStart
+      paramApi['date_end'] = dateEnd
 
       base.get('/events/Events', {
         auth: context.state.user,
@@ -185,6 +189,44 @@ export default new Vuex.Store({
 
     USERS: (context, payload) => {
       base.get('/users/ListUsers', {
+        auth: context.state.user
+      })
+        .then(function (response) {
+          context.commit('USERS', response.data)
+        })
+        .catch(function (err) {
+          console.log('Fetch Error :-S', err)
+        })
+    },
+
+    ADD_USER: (context, payload) => {
+      base.post('/users/User', JSON.stringify({
+        auth: context.state.user,
+        params: payload
+      }))
+        .then(function (response) {
+          context.dispatch('USERS', '')
+        })
+        .catch(function (err) {
+          console.log('Fetch Error :-S', err)
+        })
+    },
+
+    UPD_USER: (context, payload) => {
+      base.put('/users/User', JSON.stringify({
+        auth: context.state.user,
+        params: payload
+      }))
+        .then(function (response) {
+          context.dispatch('USERS', '')
+        })
+        .catch(function (err) {
+          console.log('Fetch Error :-S', err)
+        })
+    },
+
+    USERS_ADMIN: (context, payload) => {
+      base.get('/users/AllUsers', {
         auth: context.state.user
       })
         .then(function (response) {

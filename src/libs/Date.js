@@ -11,6 +11,11 @@ function twoCh (val) {
 export function DataToSql (year, month, day, hour = 0, min = 0, sec = 0) {
   return '' + year + '-' + twoCh(month) + '-' + twoCh(day) + ' ' + twoCh(hour) + ':' + twoCh(min) + ':' + twoCh(sec)
 }
+
+export function DataToSql2 (year, month, day, time) {
+  return '' + year + '-' + twoCh(month) + '-' + twoCh(day) + ' ' + time + ':00'
+}
+
 export function convertTime12to24 (time12h) {
   const [time, modifier] = time12h.split(' ')
   let [hours, minutes] = time.split(':')
