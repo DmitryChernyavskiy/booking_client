@@ -21,13 +21,14 @@ export default {
       if (room === undefined) {
         return
       }
-      let date = new Date(this.val.date)
+      let date = new Date()
+      date.setTime(this.val.date)
       let year = date.getFullYear()
       let mounth = date.getMonth()
 
       this.$store.commit('NEW_BASE_EVENT', { date_create: '',
         date_end: '',
-        date_start: DateTime.DataToSql(year, mounth, this.val.name),
+        date_start: DateTime.DataToSql(year, mounth+1, this.val.name),
         day_of_month: this.val.name,
         id: '0',
         id_event: '0',

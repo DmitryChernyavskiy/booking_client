@@ -9,7 +9,6 @@
         <div class="Event_Edit">
             <div class="clearfix" v-for="(item, index) in ChildEvents" :key="index">
                 <EventChild class="Event_Edit" :id="item.id" :date_start="item.date_start" :time_start="item.time_start" :time_end="item.time_end" ></EventChild>
-                <button class="Event_Edit" @click = "delete_btn(item.id)">X</button>
             </div>
         </div>
     </div>
@@ -30,7 +29,9 @@ export default {
   },
   methods: {
     all_delete_btn: function () {
-      //
+      this.$store.dispatch('DELETE_BASE_EVENT', this.id)
+      context.dispatch('REQUEST_EVENT', '0')
+      this.$router.push({ name: 'home' })
     },
     delete_btn: function (id) {
       //
@@ -50,7 +51,22 @@ export default {
       return this.$store.getters.CHILD_EVENTS
     }
 
-  }
+  },
+mounted() {
+    this.$store.watch(
+      (state, getters) => getters.BASE_EVENT,
+      (newValue, oldValue) => {
+        this.id = newValue.id_event
+        //this.$router.push({ name: 'home' })
+        if (newValue === 'success') {
+          this.complex = {
+            deep: 'some deep object',
+          }
+        }
+      }
+    )
+ 
+   }
 }
 </script>
 

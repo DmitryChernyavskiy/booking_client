@@ -25,12 +25,14 @@ export default new Vuex.Store({
     obj: odjData,
     events: [],
     curEvent: [], // array join base event + all child
+    eventsForCreate: [],
     curBaseEvent: undefined,
-    user: { username: 'user101', password: '123' },
+    user: { username: 'user101', password: '123' , id: 1},
     rooms: [],
     curRoom: undefined,
     users: [],
-    curUser: undefined
+    curUser: undefined,
+    errorMsg: ""
   },
 
   getters: {
@@ -68,6 +70,9 @@ export default new Vuex.Store({
     },
     CUR_USER: state => {
       return state.curUsers
+    },
+    ERROR_MSG: state => {
+      return state.errorMsg
     }
   },
 
@@ -113,6 +118,9 @@ export default new Vuex.Store({
     },
     CUR_USER: (state, payload) => {
       state.curUser = payload
+    },
+    ERROR_MSG: (state, payload) => {
+      state.error_msg = payload
     }
   },
 
@@ -236,10 +244,164 @@ export default new Vuex.Store({
           console.log('Fetch Error :-S', err)
         })
     },
+ 
+    SAVE_CHILD_EVENT: (context, payload) => {
+      base.post('/events/EventChild', JSON.stringify({
+        auth: context.state.user,
+        params: payload
+      }))
+        .then(function (response) {
+          payload.created = true
+          let event = context.state.eventsForCreate
+          let error = false
+          let lastTask = true
+          for (let i=0; i<event.length; i++){
+              let task = event[i]
+              if (task.created===undefined){
+                lastTask = false
+                continue
+              }
+              if (task.created===false){
+                error = true
+                break
+              }
+          }
+          if (lastTask){
+              if (error){
+                  context.commit('ERROR_MSG', "Error: Some of the orders failed to create.")
+              }else{
+                  context.commit('ERROR_MSG', "")
+                  context.dispatch('ADD_MOUNTH', 0)
+                  context.dispatch('REQUEST_EVENT', payload.id_event)
+              }
+          }
+        })
+        .catch(function (err) {
+          payload.created = false
+          let event = context.state.eventsForCreate
+          let error = false
+          let lastTask = true
+          for (let i=0; i<event.length; i++){
+              let task = event[i]
+              if (task.created===undefined){
+                lastTask = false
+                continue
+              }
+              if (task.created===false){
+                error = true
+                break
+              }
+          }
+          if (lastTask && error){
+             context.commit('ERROR_MSG', "Error: Some of the orders failed to create.")
+          }
+          console.log('Fetch Error :-S', err)
+        })
+    },
+ 
+    SAVE_BASE_EVENT: (context, payload) => {
+      base.post('/events/Event', JSON.stringify({
+        auth: context.state.user,
+        params: {
+            date_start: payload.base_date_start,
+            date_end: payload.base_date_end,
+            note: payload.base_note,
+            id_event: payload.id_event,
+            id_user: context.state.user.id,
+            id_room: payload.id_room
+        }
+      }))
+        .then(function (response) {
+          let event = context.state.eventsForCreate
+          for (let i=0; i<event.length; i++){
+              let task = event[i]
+              task.id_event = response.data
+              context.dispatch('SAVE_CHILD_EVENT', task)
+          }
+        })
+        .catch(function (err) {
+          console.log('Fetch Error :-S', err)
+          context.commit('ERROR_MSG', "Error: " + err)
+        })
+    },
 
-    SAVE_TODO: async (context, payload) => {
-      // let { data } = await Axios.post('http://xxx.com/api/todo')
-      context.commit('ADD_MOUNTH', payload)
+    DELETE_BASE_EVENT: (context, payload) => {
+      base.post('/events/DeleteEvent', JSON.stringify({
+        auth: context.state.user,
+        params: {
+            id: payload
+        }
+      }))
+        .then(function (response) {
+          context.commit('ERROR_MSG', "")
+          //context.dispatch('ADD_MOUNTH', 0)
+          //context.dispatch('REQUEST_EVENT', '0')
+        })
+        .catch(function (err) {
+          console.log('Fetch Error :-S', err)
+          context.commit('ERROR_MSG', "Error: " + err)
+        })
+    },
+
+    CHECK_PERIOD: (context, payload) => {
+      base.get('/events/CheckPeriod', {
+        auth: context.state.user,
+        params: payload
+      })
+        .then(function (response) {
+          payload.checked = true
+          let event = context.state.eventsForCreate
+          let error = false
+          let lastTask = true
+          for (let i=0; i<event.length; i++){
+              let task = event[i]
+              if (task.checked===undefined){
+                lastTask = false
+                continue
+              }
+              if (task.checked===false){
+                error = true
+                break
+              }
+          }
+          if (lastTask){
+              if (error){
+                  context.commit('ERROR_MSG', "Error: Creation of the order is impossible. This time is taken.")
+              }else{
+                  context.dispatch('SAVE_BASE_EVENT', event[0])
+              }
+          }
+        })
+        .catch(function (err) {
+          payload.checked = false
+          let event = context.state.eventsForCreate
+          let error = false
+          let lastTask = true
+          for (let i=0; i<event.length; i++){
+              let task = event[i]
+              if (task.checked===undefined){
+                lastTask = false
+                continue
+              }
+              if (task.checked===false){
+                error = true
+                break
+              }
+          }
+          if (lastTask && error){
+              context.commit('ERROR_MSG', "Error: Creation of the order is impossible. This time is taken.")
+          }
+          console.log('Fetch Error :-S', err)
+        })
+    },
+    
+    CREATE_EVENTS: (context, payload) => {
+        context.state.eventsForCreate = payload
+        context.commit('ERROR_MSG', "")
+        for (let i=0; i<payload.length; i++){
+            let task = payload[i]
+            context.dispatch('CHECK_PERIOD', task)
+        }
     }
 
   }

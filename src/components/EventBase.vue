@@ -35,6 +35,7 @@
 <script>
 // <timeselector v-model="time_start"></timeselector>
 // import Timeselector from 'vue-timeselector';
+import * as DateTime from '../libs/Date'
 
 export default {
   name: 'EventBase',
@@ -47,22 +48,26 @@ export default {
   methods: {
     create_btn: function (id) {
       let event = []
-      let CurData = new Date(date_start)
+      let CurData = new Date(this.date_start)
       let year = CurData.getFullYear()
       let mounth = CurData.getMonth()
       let dat = CurData.getDate()
 
-      let date_start1 = DataToSql2(year, mounth, dat, time_start)
-      let date_end1 = DataToSql2(year, mounth, dat, time_end)
-      event.push({
-        date_start: date_start1,
-        date_end: date_end1,
-        note: this.note,
-        user: this.note,
-        name: this.note,
-        date_start: date_start1,
-        date_end: date_end1
-      })
+      let dateStart1 = DateTime.DataToSql2(year, mounth+1, dat, this.time_start)
+      let dateEnd1 = DateTime.DataToSql2(year, mounth+1, dat, this.time_end)
+      let task = {
+        base_date_start: dateStart1,
+        base_date_end: dateEnd1,
+        base_note: this.note,
+        id_event: '0',
+        id_user: this.note,
+        id_room: this.$store.getters.CUR_ROOM.id,
+        date_start: dateStart1,
+        date_end: dateEnd1,
+        checked: undefined,
+        created: undefined
+      }
+      event.push(task)
 
       if (this.recursive) {
         for (let i = 1; i <= this.repeatNum; i++) {
@@ -72,22 +77,25 @@ export default {
           year = CurData.getFullYear()
           mounth = CurData.getMonth()
           dat = CurData.getDate()
-          dat = (CurData.getDay() === 0 ? dat + 1 : (CurData.getDay() === 6 ? dat + 2 : 0))
-
-          date_start = DataToSql2(year, mounth, dat, time_start)
-          date_end = DataToSql2(year, mounth, dat, time_end)
-          event.push({
-            date_start: date_start1,
-            date_end: date_end1,
-            note: this.note,
-            user: this.note,
-            name: this.note,
-            date_start: date_start,
-            date_end: date_end
-          })
+          dat = dat +(CurData.getDay() === 0 ? 1 : (CurData.getDay() === 6 ? 2 : 0))
+          let dateStart = DateTime.DataToSql2(year, mounth+1, dat, this.time_start)
+          let dateEnd = DateTime.DataToSql2(year, mounth+1, dat, this.time_end)
+          task = {
+            base_date_start: dateStart1,
+            base_date_end: dateEnd1,
+            base_note: this.note,
+            id_event: '0',
+            id_user: this.note,
+            id_room: this.$store.getters.CUR_ROOM.id,
+            date_start: dateStart,
+            date_end: dateEnd,
+            checked: undefined,
+            created: undefined
+          }
+          event.push(task)
         }
       }
-      this.$store.dispatch('CREATE_EVENTS', 0)
+      this.$store.dispatch('CREATE_EVENTS', event)
     }
   }
 }
