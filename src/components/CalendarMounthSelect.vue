@@ -87,7 +87,7 @@ export default {
         margin-bottom: 10px;
     }
     .month_item {
-      color: #10f338;
+      color: white;
       //background: #DDDDDD
     }
 </style>

@@ -27,7 +27,7 @@ export default new Vuex.Store({
     curEvent: [], // array join base event + all child
     eventsForCreate: [],
     curBaseEvent: undefined,
-    user: { username: 'user101', password: '123' , id: 1},
+    user: { username: 'user101', password: '123' , id: 1, role: 'admin'},
     rooms: [],
     curRoom: undefined,
     users: [],
