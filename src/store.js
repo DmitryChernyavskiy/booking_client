@@ -203,7 +203,8 @@ export default new Vuex.Store({
 
     USERS: (context, payload) => {
       base.get('/users/ListUsers', {
-        auth: context.state.user
+        auth: context.state.user,
+        params: payload
       })
         .then(function (response) {
           context.commit('USERS', response.data)
@@ -228,7 +229,7 @@ export default new Vuex.Store({
           let user = response.data[0]
           context.commit('USER', user)
           context.commit('ERROR_MSG', '')
-          store.dispatch('USERS', (user.role!=='admin' ? {id : user.id} : ''))
+          context.dispatch('USERS', (user.role!=='admin' ? {id : user.id} : ''))
         })
         .catch(function (err) {
           context.commit('ERROR_MSG', 'There is no user with this password.')

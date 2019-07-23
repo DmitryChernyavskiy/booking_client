@@ -1,6 +1,7 @@
 <template>
     <div class="login">
         <h1>Autorisation form</h1>
+         <p>admin (pass: admin) / user10 (pass:123)</p>
         <div v-if="id=='0'">
             <p>User:</p>
             <input type="text" v-model="name">
