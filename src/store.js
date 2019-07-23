@@ -27,7 +27,7 @@ export default new Vuex.Store({
     curEvent: [], // array join base event + all child
     eventsForCreate: [],
     curBaseEvent: undefined,
-    user: { username: 'user101', password: '123' , id: 1, role: 'admin'},
+    user: { name: '', password: '' , id: '0', role: ''},
     rooms: [],
     curRoom: undefined,
     users: [],
@@ -67,6 +67,9 @@ export default new Vuex.Store({
     },
     USERS: state => {
       return state.users
+    },
+    USER: state => {
+      return state.user
     },
     CUR_USER: state => {
       return state.curUsers
@@ -115,6 +118,9 @@ export default new Vuex.Store({
     },
     USERS: (state, payload) => {
       state.users = payload
+    },
+    USER: (state, payload) => {
+      state.user = payload
     },
     CUR_USER: (state, payload) => {
       state.curUser = payload
@@ -207,6 +213,28 @@ export default new Vuex.Store({
         })
     },
 
+    RESET_USER: (context, payload) => {
+      context.commit('USER', {id: '0', name: '', password: '', role: ''})
+    },
+
+    CHECK_USER: (context, payload) => {
+        //context.commit('USER', {id: '1', user: 'user10', password: '123', role: 'admin'})
+        //return
+      base.get('/users/User', {
+        auth: context.state.user,
+        params: payload
+      })
+        .then(function (response) {
+          let user = response.data[0]
+          context.commit('USER', user)
+          context.commit('ERROR_MSG', '')
+          store.dispatch('USERS', (user.role!=='admin' ? {id : user.id} : ''))
+        })
+        .catch(function (err) {
+          context.commit('ERROR_MSG', 'There is no user with this password.')
+        })
+    },
+    
     ADD_USER: (context, payload) => {
       base.post('/users/User', JSON.stringify({
         auth: context.state.user,

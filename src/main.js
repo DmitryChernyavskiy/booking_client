@@ -15,7 +15,7 @@ new Vue({
   render: h => h(App),
   created: function () {
     store.dispatch('ROOMS', '')
-    store.dispatch('USERS', '')
+    //store.dispatch('USERS', '')
     // store.dispatch('ADD_MOUNTH', 0)
   }
 }).$mount('#app')
