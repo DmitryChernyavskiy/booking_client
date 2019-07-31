@@ -8,12 +8,12 @@
             <p>password:</p>
             <input class="login_text" type="password" v-model="password"><br>
             <button @click = "login_btn()">Login</button>
+            <p class="errors">{{errorsNsg}}</p>
         </div>
         <div v-else>
             <p>User:{{name}}</p>
             <button @click = "logout_btn()">Logout</button>
         </div>
-        <h4 class="errors">{{errorsNsg}}</h4>
     </div>
 </template>
 
@@ -21,44 +21,48 @@
 
 export default {
   name: 'login',
-  props: ['id', 'name', 'password', 'errorsNsg'],
+  props: ['id', 'name', 'password'],
   methods: {
     login_btn: function () {
-        this.$store.dispatch('CHECK_USER', {user: this.name, password: this.password})
+      this.$store.dispatch('CHECK_USER', { user: this.name, password: this.password })
     },
     logout_btn: function () {
-        this.$store.dispatch('RESET_USER', '')
-        
+      this.$store.dispatch('RESET_USER', '')
     },
-    updateProps: function (id,name,password) {
-        this.id = id
-        this.name = name
-        this.password = password
+    updateProps: function (id, name, password) {
+      this.id = id
+      this.name = name
+      this.password = password
     },
     updatePropsErr: function (err) {
-        this.errorsMsg = err
+      this.errorsMsg = err
     }
   },
 
-  created() {
-        let val = this.$store.getters.USER
-        this.id = val.id
-        this.name = val.name
-        this.password = val.password
+  computed: {
+    errorsNsg () {
+      return this.$store.getters.ERROR_MSG
+    }
   },
 
-  mounted() {
+  created () {
+    let val = this.$store.getters.USER
+    this.id = val.id
+    this.name = val.name
+    this.password = val.password
+  },
 
+  mounted () {
     this.$store.watch(
       (state, getters) => getters.USER,
       (newValue, oldValue) => {
         this.updateProps(newValue.id, newValue.name, newValue.password)
-        if (newValue.id!==oldValue.id) {
-            this.$router.push({ name: 'home' })
+        if (newValue.id !== oldValue.id) {
+          this.$router.push({ name: 'home' })
         }
         if (newValue === 'success') {
           this.complex = {
-            deep: 'some deep object',
+            deep: 'some deep object'
           }
         }
       }
@@ -69,19 +73,19 @@ export default {
         this.updatePropsErr(newValue)
         if (newValue === 'success') {
           this.complex = {
-            deep: 'some deep object',
+            deep: 'some deep object'
           }
         }
       }
     )
- 
-   }
+  }
 }
 </script>
 
 <style>
     .login {
-        color: white;
+        color: #42b983;
+        font-size: larger;
         margin: 10px 5px 5px 5px;
     }
     .login_text {

@@ -16,11 +16,11 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background:url('assets/delta1.jpg') fixed;
+  background:url('assets/imperial11.jpg') fixed;
   background-size: 100%;
   min-width: 925px;
-  min-height: 750px;
-  width: 925;
+  min-height: 925px;
+  
 }
 #nav {
   padding: 30px;
@@ -33,12 +33,12 @@
 }
 
 #nav a.router-link-exact-active {
-  color: white;
+  color: purple;
   text-decoration: underline;
 }
 
 h1 {
-  color: white;
+  color: black;
 }
 
 </style>

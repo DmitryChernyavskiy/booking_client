@@ -1,7 +1,7 @@
 <template>
     <div>
         <select multiple class="calendar_events">
-            <option v-for="(item, index) in events" :key="index" @click.stop = 'edit_event_btn(item.id_event)' class="calendar_event_item"> {{item.time_start}}-{{item.time_end}} </option>
+            <option v-for="(item, index) in events" :key="index" @click.stop = 'edit_event_btn(item.id_event,item.id_user)' class="calendar_event_item"> {{item.time_start}}-{{item.time_end}} </option>
         </select>
     </div>
 </template>
@@ -11,7 +11,15 @@ export default {
   name: 'CalendarEventItem',
   props: ['events'],
   methods: {
-    edit_event_btn: function (id) {
+    edit_event_btn: function (id, id_user) {
+      if (this.$store.getters.USER.role !== 'admin' && this.$store.getters.USER.id !== id_user) {
+        if (this.$store.getters.USER.id === '0') {
+          alert('It is forbidden to change orders to unauthorized users')
+        } else {
+          alert("It is forbidden to change other people's orders")
+        }
+        return
+      }
       this.$store.dispatch('REQUEST_EVENT', id)
       this.$router.push({ name: 'EventView', params: { id: id } })
     }

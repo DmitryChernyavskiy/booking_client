@@ -21,8 +21,8 @@ const router = new Router({
       component: EventView,
       props: true,
       meta: {
-          requiresAuth: true,
-          store: store
+        requiresAuth: true,
+        store: store
       }
     },
     {
@@ -30,9 +30,9 @@ const router = new Router({
       name: 'AdminView',
       component: AdminView,
       meta: {
-          requiresAuth: true,
-          store: store,
-          role: 'admin'
+        requiresAuth: true,
+        store: store,
+        role: 'admin'
       }
     },
     {
@@ -44,26 +44,25 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  //console.log(record.meta)
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-      let user = to.meta.store.getters.USER
-      let role = to.meta.role
-      debugger
-      if (user) {
-        if ((!role) || user.role===role)
-        {
-          next()
-        }else if (user.id === '0'){
-            next('/Login')
-        }
-        return
-      }else if (!role){
+  // console.log(record.meta)
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    let user = to.meta.store.getters.USER
+    let role = to.meta.role
+
+    if (user) {
+      if ((!role) || user.role === role) {
+        next()
+      } else if (user.id === '0') {
         next('/Login')
-        return
       }
-      next('/')
+      return
+    } else if (!role) {
+      next('/Login')
+      return
+    }
+    next('/')
   } else {
-      next()
+    next()
   }
 })
 

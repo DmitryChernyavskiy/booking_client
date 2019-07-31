@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <input type="date" v-model="date_start">
+            <input type="date" v-model="date_start" :disabled="id!=='0'">
             <input type="time" min="0:00" max="24:00" v-model="time_start">
             <input type="time" min="0:00" max="24:00" v-model="time_end">
         </div>
@@ -15,20 +15,24 @@
             <div class="repeat">
                 <input type="radio" id="everyday" value="day" v-model="typeRepeat">
                 <label for="everyday">everyday</label>
-                <input  class="repeat_num" v-if="typeRepeat==='day'" v-model.number="repeatNum" type="number" min=1 max=4>
+                <input  class="repeat_num" id="everydayRep" v-if="typeRepeat==='day'" v-model.number="repeatNum" type="number" min=1 max=4>
+                <label for="everydayRep" v-if="typeRepeat==='day'">reps</label>
             </div>
             <div class="repeat">
                 <input type="radio" id="everyweek" value="week" v-model="typeRepeat">
                 <label for="everyweek">every week</label>
-                <input  class="repeat_num" v-if="typeRepeat==='week'" v-model.number="repeatNum" type="number" min=1 max=4>
+                <input  class="repeat_num" id="everyweekRep" v-if="typeRepeat==='week'" v-model.number="repeatNum" type="number" min=1 max=4>
+                <label for="everyweekRep" v-if="typeRepeat==='week'">reps</label>
             </div>
             <div class="repeat">
                 <input type="radio" id="everymonth" value="month" v-model="typeRepeat">
                 <label for="everymonth">every month</label>
-                <input  class="repeat_num" v-if="typeRepeat==='month'" v-model.number="repeatNum" type="number" min=1 max=4>
+                <input  class="repeat_num" id="everymonthRep" v-if="typeRepeat==='month'" v-model.number="repeatNum" type="number" min=1 max=4>
+                <label for="everymonthRep" v-if="typeRepeat==='month'">reps</label>
             </div>
         </div>
         <button v-if="id=='0'" @click = "create_btn()">Create</button>
+        <p class="errors">{{errorsNsg}}</p>
     </div>
 </template>
 
@@ -44,17 +48,32 @@ export default {
     // Timeselector
   },
   computed: {
+    errorsNsg () {
+      return this.$store.getters.ERROR_MSG
+    }
   },
   methods: {
     create_btn: function (id) {
+      let errors = ''
+      if ((this.note.length === 0 || !this.note.trim())){
+        errors = 'Description ("note") is not defined\n'
+      }
+      if (this.time_start>=this.time_end){
+        errors = errors + 'End time must be greater than start time\n'
+      }
+
+      if (errors !== ''){
+        this.$store.commit('ERROR_MSG', 'Error: ' + errors)
+        return
+      }
       let event = []
       let CurData = new Date(this.date_start)
       let year = CurData.getFullYear()
       let mounth = CurData.getMonth()
       let dat = CurData.getDate()
 
-      let dateStart1 = DateTime.DataToSql2(year, mounth+1, dat, this.time_start)
-      let dateEnd1 = DateTime.DataToSql2(year, mounth+1, dat, this.time_end)
+      let dateStart1 = DateTime.DataToSql2(year, mounth + 1, dat, this.time_start)
+      let dateEnd1 = DateTime.DataToSql2(year, mounth + 1, dat, this.time_end)
       let task = {
         base_date_start: dateStart1,
         base_date_end: dateEnd1,
@@ -77,9 +96,9 @@ export default {
           year = CurData.getFullYear()
           mounth = CurData.getMonth()
           dat = CurData.getDate()
-          dat = dat +(CurData.getDay() === 0 ? 1 : (CurData.getDay() === 6 ? 2 : 0))
-          let dateStart = DateTime.DataToSql2(year, mounth+1, dat, this.time_start)
-          let dateEnd = DateTime.DataToSql2(year, mounth+1, dat, this.time_end)
+          dat = dat + (CurData.getDay() === 0 ? 1 : (CurData.getDay() === 6 ? 2 : 0))
+          let dateStart = DateTime.DataToSql2(year, mounth + 1, dat, this.time_start)
+          let dateEnd = DateTime.DataToSql2(year, mounth + 1, dat, this.time_end)
           task = {
             base_date_start: dateStart1,
             base_date_end: dateEnd1,
@@ -100,3 +119,9 @@ export default {
   }
 }
 </script>
+
+<style>
+    .errors {
+        color: red;
+    }
+</style>

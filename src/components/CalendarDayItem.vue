@@ -21,14 +21,19 @@ export default {
       if (room === undefined) {
         return
       }
+      if (this.$store.getters.USER.id === '0') {
+        alert('It is forbidden to change orders to unauthorized users')
+        return
+      }
       let date = new Date()
       date.setTime(this.val.date)
       let year = date.getFullYear()
       let mounth = date.getMonth()
+      let newDate = DateTime.DataToSql(year, mounth + 1, this.val.name)
 
       this.$store.commit('NEW_BASE_EVENT', { date_create: '',
-        date_end: '',
-        date_start: DateTime.DataToSql(year, mounth+1, this.val.name),
+        date_end: newDate,
+        date_start: newDate,
         day_of_month: this.val.name,
         id: '0',
         id_event: '0',

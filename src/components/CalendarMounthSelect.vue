@@ -81,13 +81,16 @@ export default {
 
 <style>
     .allcondition * {
-        display: inline;
+      display: inline;
+      font-weight: bold;
+      font-size: initial;
     }
     .condition * {
         margin-bottom: 10px;
     }
     .month_item {
-      color: white;
+      color: black;
+      
       //background: #DDDDDD
     }
 </style>

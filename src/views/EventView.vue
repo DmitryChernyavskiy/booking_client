@@ -29,8 +29,11 @@ export default {
   },
   methods: {
     all_delete_btn: function () {
+      if (!confirm("Are you sure you want to delete the order?")){
+        return
+      }
       this.$store.dispatch('DELETE_BASE_EVENT', this.id)
-      context.dispatch('REQUEST_EVENT', '0')
+      this.$store.dispatch('REQUEST_EVENT', '0')
       this.$router.push({ name: 'home' })
     },
     delete_btn: function (id) {
@@ -52,21 +55,20 @@ export default {
     }
 
   },
-mounted() {
+  mounted () {
     this.$store.watch(
       (state, getters) => getters.BASE_EVENT,
       (newValue, oldValue) => {
         this.id = newValue.id_event
-        //this.$router.push({ name: 'home' })
+        // this.$router.push({ name: 'home' })
         if (newValue === 'success') {
           this.complex = {
-            deep: 'some deep object',
+            deep: 'some deep object'
           }
         }
       }
     )
- 
-   }
+  }
 }
 </script>
 
@@ -83,10 +85,11 @@ mounted() {
     }
     .repeat {
         text-align:left;
-        color: white;
+        color: black;
     }
     .repeat > label {
         width: 100px;
+        display: inline-block;
     }
 
 </style>

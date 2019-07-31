@@ -11,7 +11,8 @@ const base = Axios.create({
   baseURL: 'http://173.212.224.161/booking/server/api', // config.BASE_API_URL
   headers: {
     'Accept': 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    'Content-Type': 'application/json'
   }
 })
 
@@ -27,12 +28,12 @@ export default new Vuex.Store({
     curEvent: [], // array join base event + all child
     eventsForCreate: [],
     curBaseEvent: undefined,
-    user: { name: '', password: '' , id: '0', role: ''},
+    user: { name: '', password: '', id: '0', role: '' },
     rooms: [],
     curRoom: undefined,
     users: [],
     curUser: undefined,
-    errorMsg: ""
+    errorMsg: ''
   },
 
   getters: {
@@ -52,7 +53,7 @@ export default new Vuex.Store({
       let cildEvents = []
       for (let j = 0; j < state.curEvent.length; j++) {
         let elem = state.curEvent[j]
-        cildEvents.push(new Event(elem.id_event, elem.id, DateTime.extractTime(elem.date_start), DateTime.extractTime(elem.date_end), DateTime.extractDate(elem.date_start)))
+        cildEvents.push(new Event(elem.id_event, elem.id, elem.id_user, DateTime.extractTime(elem.date_start), DateTime.extractTime(elem.date_end), DateTime.extractDate(elem.date_start)))
       }
       return cildEvents
     },
@@ -74,6 +75,9 @@ export default new Vuex.Store({
     CUR_USER: state => {
       return state.curUsers
     },
+    AUTH: state => {
+      return { username: state.user.name, password: state.user.password }
+    },
     ERROR_MSG: state => {
       return state.errorMsg
     }
@@ -92,7 +96,7 @@ export default new Vuex.Store({
 
           for (let j = 0; j < test.length; j++) {
             if ((test[j].day_of_month === elem.name) && (!elem.alienday)) {
-              elem.events.push(new Event(test[j].id_event, test[j].id, DateTime.extractTime(test[j].date_start), DateTime.extractTime(test[j].date_end)))
+              elem.events.push(new Event(test[j].id_event, test[j].id, test[j].id_user, DateTime.extractTime(test[j].date_start), DateTime.extractTime(test[j].date_end)))
             }
           }
         }
@@ -126,7 +130,7 @@ export default new Vuex.Store({
       state.curUser = payload
     },
     ERROR_MSG: (state, payload) => {
-      state.error_msg = payload
+      state.errorMsg = payload
     }
   },
 
@@ -158,7 +162,7 @@ export default new Vuex.Store({
       paramApi['date_end'] = dateEnd
 
       base.get('/events/Events', {
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: paramApi
       })
         .then(function (response) {
@@ -174,7 +178,7 @@ export default new Vuex.Store({
 
     REQUEST_EVENT: (context, payload) => {
       base.get('/events/Events', {
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: { id_event: payload }
       })
         .then(function (response) {
@@ -187,7 +191,7 @@ export default new Vuex.Store({
 
     ROOMS: (context, payload) => {
       base.get('/events/Rooms', {
-        auth: context.state.user
+        auth: context.getters.AUTH
       })
         .then(function (response) {
           context.commit('ROOMS', response.data)
@@ -203,7 +207,7 @@ export default new Vuex.Store({
 
     USERS: (context, payload) => {
       base.get('/users/ListUsers', {
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: payload
       })
         .then(function (response) {
@@ -215,30 +219,31 @@ export default new Vuex.Store({
     },
 
     RESET_USER: (context, payload) => {
-      context.commit('USER', {id: '0', name: '', password: '', role: ''})
+      context.commit('USER', { id: '0', name: '', password: '', role: '' })
+      context.commit('USERS', [])
     },
 
     CHECK_USER: (context, payload) => {
-        //context.commit('USER', {id: '1', user: 'user10', password: '123', role: 'admin'})
-        //return
+      // context.commit('USER', {id: '1', user: 'user10', password: '123', role: 'admin'})
+      // return
       base.get('/users/User', {
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: payload
       })
         .then(function (response) {
           let user = response.data[0]
           context.commit('USER', user)
           context.commit('ERROR_MSG', '')
-          context.dispatch('USERS', (user.role!=='admin' ? {id : user.id} : ''))
+          context.dispatch('USERS', '')
         })
         .catch(function (err) {
           context.commit('ERROR_MSG', 'There is no user with this password.')
         })
     },
-    
+
     ADD_USER: (context, payload) => {
       base.post('/users/User', JSON.stringify({
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: payload
       }))
         .then(function (response) {
@@ -251,7 +256,7 @@ export default new Vuex.Store({
 
     UPD_USER: (context, payload) => {
       base.put('/users/User', JSON.stringify({
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: payload
       }))
         .then(function (response) {
@@ -264,7 +269,7 @@ export default new Vuex.Store({
 
     USERS_ADMIN: (context, payload) => {
       base.get('/users/AllUsers', {
-        auth: context.state.user
+        auth: context.getters.AUTH
       })
         .then(function (response) {
           context.commit('USERS', response.data)
@@ -273,10 +278,10 @@ export default new Vuex.Store({
           console.log('Fetch Error :-S', err)
         })
     },
- 
+
     SAVE_CHILD_EVENT: (context, payload) => {
       base.post('/events/EventChild', JSON.stringify({
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: payload
       }))
         .then(function (response) {
@@ -284,25 +289,25 @@ export default new Vuex.Store({
           let event = context.state.eventsForCreate
           let error = false
           let lastTask = true
-          for (let i=0; i<event.length; i++){
-              let task = event[i]
-              if (task.created===undefined){
-                lastTask = false
-                continue
-              }
-              if (task.created===false){
-                error = true
-                break
-              }
+          for (let i = 0; i < event.length; i++) {
+            let task = event[i]
+            if (task.created === undefined) {
+              lastTask = false
+              continue
+            }
+            if (task.created === false) {
+              error = true
+              break
+            }
           }
-          if (lastTask){
-              if (error){
-                  context.commit('ERROR_MSG', "Error: Some of the orders failed to create.")
-              }else{
-                  context.commit('ERROR_MSG', "")
-                  context.dispatch('ADD_MOUNTH', 0)
-                  context.dispatch('REQUEST_EVENT', payload.id_event)
-              }
+          if (lastTask) {
+            if (error) {
+              context.commit('ERROR_MSG', 'Error: Some of the orders failed to create.')
+            } else {
+              context.commit('ERROR_MSG', '')
+              context.dispatch('ADD_MOUNTH', 0)
+              context.dispatch('REQUEST_EVENT', payload.id_event)
+            }
           }
         })
         .catch(function (err) {
@@ -310,71 +315,71 @@ export default new Vuex.Store({
           let event = context.state.eventsForCreate
           let error = false
           let lastTask = true
-          for (let i=0; i<event.length; i++){
-              let task = event[i]
-              if (task.created===undefined){
-                lastTask = false
-                continue
-              }
-              if (task.created===false){
-                error = true
-                break
-              }
+          for (let i = 0; i < event.length; i++) {
+            let task = event[i]
+            if (task.created === undefined) {
+              lastTask = false
+              continue
+            }
+            if (task.created === false) {
+              error = true
+              break
+            }
           }
-          if (lastTask && error){
-             context.commit('ERROR_MSG', "Error: Some of the orders failed to create.")
+          if (lastTask && error) {
+            context.commit('ERROR_MSG', 'Error: Some of the orders failed to create.')
           }
           console.log('Fetch Error :-S', err)
         })
     },
- 
+
     SAVE_BASE_EVENT: (context, payload) => {
       base.post('/events/Event', JSON.stringify({
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: {
-            date_start: payload.base_date_start,
-            date_end: payload.base_date_end,
-            note: payload.base_note,
-            id_event: payload.id_event,
-            id_user: context.state.user.id,
-            id_room: payload.id_room
+          date_start: payload.base_date_start,
+          date_end: payload.base_date_end,
+          note: payload.base_note,
+          id_event: payload.id_event,
+          id_user: context.state.user.id,
+          id_room: payload.id_room
         }
       }))
         .then(function (response) {
           let event = context.state.eventsForCreate
-          for (let i=0; i<event.length; i++){
-              let task = event[i]
-              task.id_event = response.data
-              context.dispatch('SAVE_CHILD_EVENT', task)
+          for (let i = 0; i < event.length; i++) {
+            let task = event[i]
+            task.id_event = response.data
+            context.dispatch('SAVE_CHILD_EVENT', task)
           }
         })
         .catch(function (err) {
           console.log('Fetch Error :-S', err)
-          context.commit('ERROR_MSG', "Error: " + err)
+          context.commit('ERROR_MSG', 'Error: ' + err)
         })
     },
 
     DELETE_BASE_EVENT: (context, payload) => {
-      base.post('/events/DeleteEvent', JSON.stringify({
-        auth: context.state.user,
+      base.post('/events/DelEvent', JSON.stringify({
+        auth: context.getters.AUTH,
         params: {
-            id: payload
+          id: payload
         }
       }))
         .then(function (response) {
-          context.commit('ERROR_MSG', "")
-          //context.dispatch('ADD_MOUNTH', 0)
-          //context.dispatch('REQUEST_EVENT', '0')
+          context.commit('ERROR_MSG', '')
+          // context.dispatch('ADD_MOUNTH', 0)
+          // context.dispatch('REQUEST_EVENT', '0')
         })
         .catch(function (err) {
           console.log('Fetch Error :-S', err)
-          context.commit('ERROR_MSG', "Error: " + err)
+          context.commit('ERROR_MSG', 'Error: ' + err)
         })
     },
 
     CHECK_PERIOD: (context, payload) => {
       base.get('/events/CheckPeriod', {
-        auth: context.state.user,
+        auth: context.getters.AUTH,
         params: payload
       })
         .then(function (response) {
@@ -382,23 +387,23 @@ export default new Vuex.Store({
           let event = context.state.eventsForCreate
           let error = false
           let lastTask = true
-          for (let i=0; i<event.length; i++){
-              let task = event[i]
-              if (task.checked===undefined){
-                lastTask = false
-                continue
-              }
-              if (task.checked===false){
-                error = true
-                break
-              }
+          for (let i = 0; i < event.length; i++) {
+            let task = event[i]
+            if (task.checked === undefined) {
+              lastTask = false
+              continue
+            }
+            if (task.checked === false) {
+              error = true
+              break
+            }
           }
-          if (lastTask){
-              if (error){
-                  context.commit('ERROR_MSG', "Error: Creation of the order is impossible. This time is taken.")
-              }else{
-                  context.dispatch('SAVE_BASE_EVENT', event[0])
-              }
+          if (lastTask) {
+            if (error) {
+              context.commit('ERROR_MSG', 'Error: Creation of the order is impossible. This time is taken.')
+            } else {
+              context.dispatch('SAVE_BASE_EVENT', event[0])
+            }
           }
         })
         .catch(function (err) {
@@ -406,31 +411,31 @@ export default new Vuex.Store({
           let event = context.state.eventsForCreate
           let error = false
           let lastTask = true
-          for (let i=0; i<event.length; i++){
-              let task = event[i]
-              if (task.checked===undefined){
-                lastTask = false
-                continue
-              }
-              if (task.checked===false){
-                error = true
-                break
-              }
+          for (let i = 0; i < event.length; i++) {
+            let task = event[i]
+            if (task.checked === undefined) {
+              lastTask = false
+              continue
+            }
+            if (task.checked === false) {
+              error = true
+              break
+            }
           }
-          if (lastTask && error){
-              context.commit('ERROR_MSG', "Error: Creation of the order is impossible. This time is taken.")
+          if (lastTask && error) {
+            context.commit('ERROR_MSG', 'Error: Creation of the order is impossible. This time is taken.')
           }
           console.log('Fetch Error :-S', err)
         })
     },
-    
+
     CREATE_EVENTS: (context, payload) => {
-        context.state.eventsForCreate = payload
-        context.commit('ERROR_MSG', "")
-        for (let i=0; i<payload.length; i++){
-            let task = payload[i]
-            context.dispatch('CHECK_PERIOD', task)
-        }
+      context.state.eventsForCreate = payload
+      context.commit('ERROR_MSG', '')
+      for (let i = 0; i < payload.length; i++) {
+        let task = payload[i]
+        context.dispatch('CHECK_PERIOD', task)
+      }
     }
 
   }
