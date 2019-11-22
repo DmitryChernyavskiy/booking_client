@@ -91,8 +91,8 @@ export default {
       if (this.recursive) {
         for (let i = 1; i <= this.repeatNum; i++) {
           CurData.setFullYear(year)
-          CurData.setMonth(mounth + (this.typeRepeat === 'month' ? i : 0))
-          CurData.setDate(dat + (this.typeRepeat === 'day' ? i : (this.typeRepeat === 'week' ? i * 7 : 0)))
+          CurData.setMonth(mounth + (this.typeRepeat === 'month' ? 1 : 0))
+          CurData.setDate(dat + (this.typeRepeat === 'day' ? 1 : (this.typeRepeat === 'week' ? 7 : 0)))
           year = CurData.getFullYear()
           mounth = CurData.getMonth()
           dat = CurData.getDate()

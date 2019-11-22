@@ -368,8 +368,8 @@ export default new Vuex.Store({
       }))
         .then(function (response) {
           context.commit('ERROR_MSG', '')
-          // context.dispatch('ADD_MOUNTH', 0)
-          // context.dispatch('REQUEST_EVENT', '0')
+          context.dispatch('ADD_MOUNTH', 0)
+          //context.dispatch('REQUEST_EVENT', '0')
         })
         .catch(function (err) {
           console.log('Fetch Error :-S', err)
